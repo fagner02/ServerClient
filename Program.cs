@@ -1,7 +1,7 @@
 ﻿using SD;
 class Program
 {
-    public static void Main(string[] args)
+    public static async void Main(string[] args)
     {
         if (args.Length < 1)
         {
@@ -12,11 +12,11 @@ class Program
         {
             case "client":
                 Client client = new();
-                client.Connect();
+                await client.Connect();
                 break;
             case "server":
                 Server server = new();
-                server.Setup();
+                await Server.Setup();
                 break;
         }
     }

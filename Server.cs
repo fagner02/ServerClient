@@ -11,7 +11,7 @@ namespace SD
 
         }
 
-        public async void Setup()
+        public static async Task<bool> Setup()
         {
             IPHostEntry ipHostInfo = await Dns.GetHostEntryAsync("localhost");
             IPAddress ipAddress = ipHostInfo.AddressList[0];
@@ -28,9 +28,10 @@ namespace SD
                 ArraySegment<byte> buffer = new();
                 await handler.ReceiveAsync(buffer);
                 Console.WriteLine(buffer);
-
+                return true;
             }
             Console.WriteLine("Hello, World!");
+            return false;
         }
     }
 
