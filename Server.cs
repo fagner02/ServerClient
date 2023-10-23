@@ -16,7 +16,7 @@ namespace SD
         {
             try
             {
-                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.100.11"), 11000);
+                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.100.125"), 11000);
                 Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
