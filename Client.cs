@@ -11,15 +11,17 @@ namespace SD
 
         }
 
-        public async void Connect()
+        public void Connect()
         {
             IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), 11_000);
-            using Socket client = new(new AddressFamily(), SocketType.Stream, ProtocolType.IPv4);
-            client.Accept();
+            using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Console.WriteLine(ipEndPoint.Address);
             client.Connect(ipEndPoint);
+            // client.Accept();
+
             var message = "Hi friends 👋!<|EOM|>";
             var messageBytes = Encoding.UTF8.GetBytes(message);
-            _ = await client.SendAsync(messageBytes, SocketFlags.None);
+            _ = client.Send(messageBytes, SocketFlags.None);
             Console.WriteLine("Hello, World!");
             return;
         }

@@ -8,7 +8,7 @@ class Program
         Call(args);
     }
 
-    public static async void Call(string[] args)
+    public static void Call(string[] args)
     {
         if (args.Length < 1)
         {
