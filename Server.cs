@@ -27,7 +27,7 @@ namespace SD
                 {
                     ArraySegment<byte> buffer = new();
                     int bytes = handler.Receive(buffer);
-                    if (bytes > 0)
+                    if (buffer.Count > 0)
                     {
                         var response = Encoding.UTF8.GetString(buffer.Array!, 0, bytes);
                         Console.WriteLine(buffer);

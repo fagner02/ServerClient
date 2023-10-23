@@ -21,7 +21,7 @@ namespace SD
 
             var message = "Hi friends 👋!<|EOM|>";
             var messageBytes = Encoding.UTF8.GetBytes(message);
-            _ = client.Send(messageBytes, SocketFlags.None);
+            _ = client.Send(messageBytes);
             Console.WriteLine("Hello, World!");
             return;
         }
