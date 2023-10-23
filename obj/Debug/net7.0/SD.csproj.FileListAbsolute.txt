@@ -1,0 +1,14 @@
+C:\Users\Fagner\Downloads\SD\bin\Debug\net7.0\SD.exe
+C:\Users\Fagner\Downloads\SD\bin\Debug\net7.0\SD.deps.json
+C:\Users\Fagner\Downloads\SD\bin\Debug\net7.0\SD.runtimeconfig.json
+C:\Users\Fagner\Downloads\SD\bin\Debug\net7.0\SD.dll
+C:\Users\Fagner\Downloads\SD\bin\Debug\net7.0\SD.pdb
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.AssemblyInfoInputs.cache
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.AssemblyInfo.cs
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.csproj.CoreCompileInputs.cache
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.dll
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\refint\SD.dll
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.pdb
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\SD.genruntimeconfig.cache
+C:\Users\Fagner\Downloads\SD\obj\Debug\net7.0\ref\SD.dll
