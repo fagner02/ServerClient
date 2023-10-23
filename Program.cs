@@ -3,6 +3,11 @@ class Program
 {
     public static void Main(string[] args)
     {
+        if (args.Length < 1)
+        {
+            Console.WriteLine("cmd: client | server");
+            return;
+        }
         switch (args[0])
         {
             case "client":
