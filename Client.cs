@@ -1,24 +1,26 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 
 namespace SD
 {
     class Client
     {
-        Client()
+        public Client()
         {
 
         }
 
-        async void Connect()
+        public async void Connect()
         {
-            IPHostEntry ipHostInfo = await Dns.GetHostEntryAsync("localhost");
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint ipEndPoint = new(IPAddress.Parse(""), 11_000);
-            using Socket client = new Socket(new AddressFamily(), SocketType.Stream, ProtocolType.IPv4);
+            using Socket client = new(new AddressFamily(), SocketType.Stream, ProtocolType.IPv4);
             client.Accept();
             client.Connect(ipEndPoint);
+            var message = "Hi friends 👋!<|EOM|>";
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+            _ = await client.SendAsync(messageBytes, SocketFlags.None);
             Console.WriteLine("Hello, World!");
         }
     }
