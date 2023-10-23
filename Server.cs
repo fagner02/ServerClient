@@ -19,7 +19,7 @@ namespace SD
                 IPHostEntry host = Dns.GetHostEntry("localhost");
                 IPAddress ipAddress = host.AddressList[0];
                 IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
-                Socket server = new(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(ipAddress);
                 server.Bind(localEndPoint);
                 server.Listen(11000);
