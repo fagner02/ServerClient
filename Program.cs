@@ -1,7 +1,14 @@
-﻿using SD;
+﻿using System.Net;
+using System.Net.Sockets;
+using SD;
 class Program
 {
-    public static async void Main(string[] args)
+    public static void Main(string[] args)
+    {
+        Call(args);
+    }
+
+    public static async void Call(string[] args)
     {
         if (args.Length < 1)
         {
@@ -12,12 +19,12 @@ class Program
         {
             case "client":
                 Client client = new();
-                await client.Connect();
+                client.Connect();
                 break;
             case "server":
-                Server server = new();
-                await Server.Setup();
+                Server.Setup();
                 break;
         }
+        return;
     }
 }

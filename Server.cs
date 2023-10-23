@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace SD
 {
@@ -11,27 +12,34 @@ namespace SD
 
         }
 
-        public static async Task<bool> Setup()
+        public static void Setup()
         {
-            IPHostEntry ipHostInfo = await Dns.GetHostEntryAsync("localhost");
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint ipEndPoint = new(ipAddress, 11_000);
-            using Socket server = new Socket(AddressFamily.Ipx, SocketType.Stream, ProtocolType.IPv4);
-
-            Console.WriteLine("Connecting");
-            server.Bind(ipEndPoint);
-            server.Listen(11000);
-            Socket handler = await server.AcceptAsync();
-            Console.WriteLine("Connected");
-            while (true)
+            try
             {
-                ArraySegment<byte> buffer = new();
-                await handler.ReceiveAsync(buffer);
-                Console.WriteLine(buffer);
-                return true;
+                IPHostEntry host = Dns.GetHostEntry("localhost");
+                IPAddress ipAddress = host.AddressList[0];
+                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+                Socket server = new(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Console.WriteLine(ipAddress);
+                server.Bind(localEndPoint);
+                server.Listen(11000);
+                Socket handler = server.Accept();
+                Console.WriteLine("Connected");
+                while (true)
+                {
+                    ArraySegment<byte> buffer = new();
+                    int bytes = handler.Receive(buffer);
+                    if (bytes > 0)
+                    {
+                        var response = Encoding.UTF8.GetString(buffer.Array!, 0, bytes);
+                        Console.WriteLine(buffer);
+                        return;
+                    }
+                }
+                Console.WriteLine("Hello, World!");
+
             }
-            Console.WriteLine("Hello, World!");
-            return false;
+            catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
         }
     }
 
