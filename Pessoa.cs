@@ -6,7 +6,7 @@ namespace SD
 {
     public class Pessoa
     {
-        public string Nome;
+        public required string Nome;
         public int Cpf;
         public int Idade;
     }
