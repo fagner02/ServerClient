@@ -13,10 +13,12 @@ namespace SD
 
         public void Connect()
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), 11_00);
+            IPHostEntry host = Dns.GetHostEntry("localhost");
+            IPAddress ipAddress = host.AddressList[0];
+            IPEndPoint localEndPoint = new(ipAddress, 1100);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Console.WriteLine(ipEndPoint.Address);
-            client.Connect(ipEndPoint);
+            Console.WriteLine(localEndPoint.Address);
+            client.Connect(localEndPoint);
             // client.Accept();
 
             var message = "Hi friends 👋!<|EOM|>";
@@ -24,7 +26,8 @@ namespace SD
             int bytes = client.Send(messageBytes);
 
             Console.WriteLine(bytes);
-            client.Shutdown(SocketShutdown.Both);
+            // client.
+            // client.Shutdown(SocketShutdown.Both);
             client.Close();
             return;
         }

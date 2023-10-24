@@ -16,13 +16,15 @@ namespace SD
         {
             try
             {
-                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.125"), 1100);
+                IPHostEntry host = Dns.GetHostEntry("localhost");
+                IPAddress ipAddress = host.AddressList[0];
+                IPEndPoint localEndPoint = new(ipAddress, 1100);
                 Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
                 server.Listen(8080);
                 Socket handler = server.Accept();
-                Console.WriteLine("Connected"); handler.Blocking = false;
+                // Console.WriteLine("Connected"); handler.Blocking = false;
                 handler.ReceiveTimeout = 10;
                 while (true)
                 {
