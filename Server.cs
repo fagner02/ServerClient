@@ -16,24 +16,22 @@ namespace SD
         {
             try
             {
-                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.11"), 1100);
+                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.125"), 1100);
                 Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
-                server.Listen(8080);
+                server.Listen(8090);
                 Socket handler = server.Accept();
-                Console.WriteLine("Connected"); handler.Blocking = false;
-                handler.ReceiveTimeout = 10;
+                Console.WriteLine("Connected");
                 while (true)
                 {
-                    ArraySegment<byte> buffer = new();
-                    int bytes = handler.Receive(buffer, SocketFlags.None);
+                    byte[] buffer = new byte[1024];
+                    int bytes = handler.Receive(buffer);
 
-                    Console.WriteLine(handler.Blocking);
-                    if (buffer.Count > 0)
+                    if (bytes > 0)
                     {
-                        var response = Encoding.UTF8.GetString(buffer.Array!, 0, bytes);
-                        Console.WriteLine(buffer);
+                        var response = Encoding.UTF8.GetString(buffer, 0, bytes);
+                        Console.WriteLine(response);
                         return;
                     }
                 }
