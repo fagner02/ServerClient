@@ -5,12 +5,8 @@ using System.Text;
 namespace SD
 {
 
-    class Server
+    static class Server
     {
-        public Server()
-        {
-
-        }
 
         public static void Setup()
         {
