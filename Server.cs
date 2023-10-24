@@ -16,17 +16,20 @@ namespace SD
         {
             try
             {
-                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.100.125"), 11000);
+                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.125"), 1100);
                 Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
-                server.Listen(11000);
+                server.Listen(8080);
                 Socket handler = server.Accept();
-                Console.WriteLine("Connected");
+                Console.WriteLine("Connected"); handler.Blocking = false;
+                handler.ReceiveTimeout = 10;
                 while (true)
                 {
                     ArraySegment<byte> buffer = new();
-                    int bytes = handler.Receive(buffer);
+                    int bytes = handler.Receive(buffer, SocketFlags.None);
+
+                    Console.WriteLine(handler.Blocking);
                     if (buffer.Count > 0)
                     {
                         var response = Encoding.UTF8.GetString(buffer.Array!, 0, bytes);
@@ -34,8 +37,6 @@ namespace SD
                         return;
                     }
                 }
-                Console.WriteLine("Hello, World!");
-
             }
             catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
         }
