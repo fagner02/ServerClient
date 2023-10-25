@@ -14,16 +14,21 @@ namespace SD
         }
         public static void ProcessClientRequest(object? param)
         {
-            Socket handler = (Socket)param!;
+            ClientRequest clientRequest = (ClientRequest)param!;
+            Socket handler = clientRequest.handler;
             Console.WriteLine("Connected");
 
-            byte[] buffer = new byte[1024];
+
             string response = "";
             while (true)
             {
+                byte[] buffer = new byte[1024];
+                Console.WriteLine("in");
+                if (handler.Available == 0) break;
                 int bytes = handler.Receive(buffer);
-                if (bytes == 0) break;
-                response += Encoding.UTF8.GetString(buffer, 0, bytes);
+                Console.WriteLine(bytes);
+                response = Encoding.UTF8.GetString(buffer, 0, bytes);
+                Console.WriteLine(response);
             }
             // pessoas = JsonSerializer.Deserialize<Pessoa[]>(response, new JsonSerializerOptions()
             // {
@@ -32,6 +37,7 @@ namespace SD
             // }) ?? pessoas;
             handler.Send(Encoding.UTF8.GetBytes("Message sent"));
             handler.Close();
+            Console.WriteLine("Sent");
         }
         public static void ThreadTask()
         {
@@ -42,7 +48,7 @@ namespace SD
             try
             {
                 Pessoa[] pessoas = Array.Empty<Pessoa>();
-                IPEndPoint localEndPoint = new(IPAddress.Parse("172.25.238.106"), 1100);
+                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.125"), 1100);
                 Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
@@ -50,7 +56,6 @@ namespace SD
                 while (true)
                 {
                     Socket handler = server.Accept();
-
                     Thread thread = new(new ParameterizedThreadStart(ProcessClientRequest));
                     thread.Start(new ClientRequest() { handler = handler });
                 }
