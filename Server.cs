@@ -8,14 +8,13 @@ namespace SD
 {
     class Server
     {
-        public static List<int> j;
         class ClientRequest
         {
-            public Socket handler;
-            public ref Dictionary<string, VariantType> data;
+            public required Socket handler;
         }
-        public static void ProcessClientRequest(object handler)
+        public static void ProcessClientRequest(object? param)
         {
+            Socket handler = (Socket)param!;
             Console.WriteLine("Connected");
 
             byte[] buffer = new byte[1024];
@@ -38,7 +37,7 @@ namespace SD
         {
 
         }
-        public static void Setup(ref Dictionary<string, VariantType> data)
+        public static void Setup()
         {
             try
             {
@@ -48,13 +47,12 @@ namespace SD
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
                 server.Listen();
-                j.Add(0);
                 while (true)
                 {
                     Socket handler = server.Accept();
 
                     Thread thread = new(new ParameterizedThreadStart(ProcessClientRequest));
-                    thread.Start(new ClientRequest() as object);
+                    thread.Start(new ClientRequest() { handler = handler });
                 }
             }
             catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
