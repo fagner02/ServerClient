@@ -16,12 +16,14 @@ namespace SD
             var messageBytes = Encoding.UTF8.GetBytes(message);
             int bytes = client.Send(messageBytes);
 
-            byte[] buffer = new byte[1024];
+
             string response = "";
             while (true)
             {
+                if (client.Available == 0) break;
+                byte[] buffer = new byte[1024];
                 int resBytes = client.Receive(buffer);
-                if (bytes == 0) break;
+
                 response += Encoding.UTF8.GetString(buffer, 0, resBytes);
             }
             Console.WriteLine(response);

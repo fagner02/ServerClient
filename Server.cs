@@ -27,10 +27,9 @@ namespace SD
                 if (handler.Available == 0) break;
                 int bytes = handler.Receive(buffer);
                 Console.WriteLine(bytes);
-                response = Encoding.UTF8.GetString(buffer, 0, bytes);
-                Console.WriteLine(response);
+                response += Encoding.UTF8.GetString(buffer, 0, bytes);
             }
-
+            Console.WriteLine(response);
             handler.Send(Encoding.UTF8.GetBytes("Message sent"));
             handler.Close();
             Console.WriteLine("Sent");
