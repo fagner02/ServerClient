@@ -1,39 +1,64 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+using Microsoft.VisualBasic;
 
 namespace SD
 {
-
-    static class Server
+    class Server
     {
+        public static List<int> j;
+        class ClientRequest
+        {
+            public Socket handler;
+            public ref Dictionary<string, VariantType> data;
+        }
+        public static void ProcessClientRequest(object handler)
+        {
+            Console.WriteLine("Connected");
 
-        public static void Setup()
+            byte[] buffer = new byte[1024];
+            string response = "";
+            while (true)
+            {
+                int bytes = handler.Receive(buffer);
+                if (bytes == 0) break;
+                response += Encoding.UTF8.GetString(buffer, 0, bytes);
+            }
+            // pessoas = JsonSerializer.Deserialize<Pessoa[]>(response, new JsonSerializerOptions()
+            // {
+            //     IncludeFields = true,
+            //     WriteIndented = true
+            // }) ?? pessoas;
+            handler.Send(Encoding.UTF8.GetBytes("Message sent"));
+            handler.Close();
+        }
+        public static void ThreadTask()
+        {
+
+        }
+        public static void Setup(ref Dictionary<string, VariantType> data)
         {
             try
             {
-                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.125"), 1100);
+                Pessoa[] pessoas = Array.Empty<Pessoa>();
+                IPEndPoint localEndPoint = new(IPAddress.Parse("172.25.238.106"), 1100);
                 Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 Console.WriteLine(localEndPoint.Address);
                 server.Bind(localEndPoint);
-                server.Listen(8090);
-                Socket handler = server.Accept();
-                Console.WriteLine("Connected");
+                server.Listen();
+                j.Add(0);
                 while (true)
                 {
-                    byte[] buffer = new byte[1024];
-                    int bytes = handler.Receive(buffer);
+                    Socket handler = server.Accept();
 
-                    if (bytes > 0)
-                    {
-                        var response = Encoding.UTF8.GetString(buffer, 0, bytes);
-                        Console.WriteLine(response);
-                        return;
-                    }
+                    Thread thread = new(new ParameterizedThreadStart(ProcessClientRequest));
+                    thread.Start(new ClientRequest() as object);
                 }
             }
             catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
         }
-    }
 
+    }
 }
