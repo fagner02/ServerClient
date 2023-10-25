@@ -30,11 +30,7 @@ namespace SD
                 response = Encoding.UTF8.GetString(buffer, 0, bytes);
                 Console.WriteLine(response);
             }
-            // pessoas = JsonSerializer.Deserialize<Pessoa[]>(response, new JsonSerializerOptions()
-            // {
-            //     IncludeFields = true,
-            //     WriteIndented = true
-            // }) ?? pessoas;
+
             handler.Send(Encoding.UTF8.GetBytes("Message sent"));
             handler.Close();
             Console.WriteLine("Sent");
