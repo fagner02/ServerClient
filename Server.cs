@@ -10,14 +10,15 @@ namespace SD
     {
         class ClientRequest
         {
+            public string nome = "";
             public required Socket handler;
         }
         public static void ProcessClientRequest(object? param)
         {
             ClientRequest clientRequest = (ClientRequest)param!;
             Socket handler = clientRequest.handler;
+            clientRequest.nome = "Julia";
             Console.WriteLine("Connected");
-
 
             string response = "";
             while (true)
@@ -52,7 +53,9 @@ namespace SD
                 {
                     Socket handler = server.Accept();
                     Thread thread = new(new ParameterizedThreadStart(ProcessClientRequest));
-                    thread.Start(new ClientRequest() { handler = handler });
+
+                    thread.Start(new ClientRequest() { handler = handler, nome = "antoniio" });
+                    Console.WriteLine();
                 }
             }
             catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }

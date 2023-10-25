@@ -8,7 +8,7 @@ namespace SD
     {
         public static void Connect(string message = "Hello coisa")
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("172.25.238.106"), 1100);
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), 1100);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
@@ -16,14 +16,12 @@ namespace SD
             var messageBytes = Encoding.UTF8.GetBytes(message);
             int bytes = client.Send(messageBytes);
 
-
             string response = "";
             while (true)
             {
-                if (client.Available == 0) break;
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[11];
                 int resBytes = client.Receive(buffer);
-
+                if (resBytes == 0) break;
                 response += Encoding.UTF8.GetString(buffer, 0, resBytes);
             }
             Console.WriteLine(response);
