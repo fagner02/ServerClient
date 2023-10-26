@@ -8,7 +8,7 @@ namespace SD
 {
     public class Server<T>
     {
-        List<T> Data = new();
+        protected List<T> Data = new();
         class ServerParams
         {
             public required MethodInfo Method;
