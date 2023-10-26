@@ -8,7 +8,7 @@ namespace SD
     {
         public static void Connect(int port, Action callback, string? message = null)
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), port);
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("172.25.251.25"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);

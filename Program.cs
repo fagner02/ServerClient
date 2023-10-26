@@ -1,4 +1,5 @@
-﻿using SD;
+﻿using System.Text.Json;
+using SD;
 class Program
 {
     public static void Main(string[] args)
@@ -12,16 +13,17 @@ class Program
         switch (args[0])
         {
             case "client":
+                Client.Connect(1, () => { }, JsonSerializer.Serialize(new Pessoa[] { new() { Nome = "dwdlqmlke" } }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
                 Client.Connect(2, () => { });
                 break;
             case "server":
-                Server<int> server = new();
+                Server<Pessoa> server = new();
                 server.Setup();
                 break;
             case "test":
                 var outputStream = new PessoasOutputStream(new Pessoa[] {
                     new () {Cpf = 100000002, Nome = "Joana", Idade = 19},
-                    new () {Cpf = 111000123, Nome = "Chico", Idade = 30},
+                    new () {Cpf = 11100013, Nome = "Chico", Idade = 30},
                     new () {Cpf = 111111111, Nome = "João", Idade = 25},
                     new () {Cpf = 123123123, Nome = "Seu Zé", Idade = 45},
                     new () {Cpf = 999999999, Nome = "Francisca", Idade = 50},
