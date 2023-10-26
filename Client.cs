@@ -23,7 +23,9 @@ namespace SD
             while (true)
             {
                 byte[] buffer = new byte[1024];
+                Console.WriteLine("buffer");
                 int resBytes = client.Receive(buffer);
+                Console.WriteLine(resBytes);
                 if (resBytes == 0) break;
                 response += Encoding.UTF8.GetString(buffer, 0, resBytes);
             }
