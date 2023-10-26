@@ -6,26 +6,30 @@ namespace SD
 {
     static class Client
     {
-        public static void Connect(string message = "Hello coisa")
+        public static void Connect(int port, Action callback, string? message = null)
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), 1100);
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
 
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-            int bytes = client.Send(messageBytes);
+            if (message != null)
+            {
+                var messageBytes = Encoding.UTF8.GetBytes(message);
+                int bytes = client.Send(messageBytes);
+            }
 
             string response = "";
             while (true)
             {
-                byte[] buffer = new byte[11];
+                byte[] buffer = new byte[1024];
                 int resBytes = client.Receive(buffer);
                 if (resBytes == 0) break;
                 response += Encoding.UTF8.GetString(buffer, 0, resBytes);
             }
+
+            callback();
             Console.WriteLine(response);
-            Console.WriteLine(bytes);
             client.Close();
             return;
         }

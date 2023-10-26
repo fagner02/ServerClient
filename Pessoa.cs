@@ -38,7 +38,7 @@ namespace SD
         public void SendToServer()
         {
             string encodedString = JsonSerializer.Serialize(Pessoas, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
-            Client.Connect(encodedString);
+            Client.Connect(1, () => { }, encodedString);
         }
     }
 
@@ -110,7 +110,7 @@ namespace SD
         public void ReadFromServer()
         {
             string encodedString = JsonSerializer.Serialize(Pessoas, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
-            Client.Connect(encodedString);
+            Client.Connect(2, () => { });
         }
     }
 }

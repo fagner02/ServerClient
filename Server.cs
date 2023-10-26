@@ -1,65 +1,88 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using Microsoft.VisualBasic;
 
 namespace SD
 {
-    class Server
+    public class Server<T>
     {
-        class ClientRequest
+        List<T> Data = new();
+        class ServerParams
         {
-            public string nome = "";
-            public required Socket handler;
+            public required MethodInfo Method;
         }
-        public static void ProcessClientRequest(object? param)
+
+        [Request(Port = 2)]
+        public void ReadRequest(Socket handler)
         {
-            ClientRequest clientRequest = (ClientRequest)param!;
-            Socket handler = clientRequest.handler;
-            clientRequest.nome = "Julia";
             Console.WriteLine("Connected");
 
+            string encodedString = JsonSerializer.Serialize(Data, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
+            handler.Send(Encoding.UTF8.GetBytes(encodedString));
+            handler.Close();
+            Console.WriteLine("Sent");
+        }
+
+        [Request(Port = 1)]
+        public void WriteRequest(Socket handler)
+        {
             string response = "";
             while (true)
             {
                 byte[] buffer = new byte[1024];
-                Console.WriteLine("in");
                 if (handler.Available == 0) break;
                 int bytes = handler.Receive(buffer);
                 Console.WriteLine(bytes);
                 response += Encoding.UTF8.GetString(buffer, 0, bytes);
             }
-            Console.WriteLine(response);
-            handler.Send(Encoding.UTF8.GetBytes("Message sent"));
-            handler.Close();
-            Console.WriteLine("Sent");
-        }
-        public static void ThreadTask()
-        {
 
+            List<T>? data = JsonSerializer.Deserialize<List<T>>(response, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
+            if (data == null) return;
+            Data = data;
         }
-        public static void Setup()
+
+        public void InstanceEndpoint(object? param)
         {
-            try
+            ServerParams serverParams = (ServerParams)param!;
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
+            int port = (int)serverParams.Method.CustomAttributes.First().NamedArguments.First().TypedValue.Value!;
+            IPEndPoint localEndPoint = new(IPAddress.Parse(ip), port);
+            Console.WriteLine(localEndPoint);
+
+            Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            server.Bind(localEndPoint);
+            server.Listen();
+
+            while (true)
             {
-                Pessoa[] pessoas = Array.Empty<Pessoa>();
-                IPEndPoint localEndPoint = new(IPAddress.Parse("192.168.100.125"), 1100);
-                Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                Console.WriteLine(localEndPoint.Address);
-                server.Bind(localEndPoint);
-                server.Listen();
-                while (true)
-                {
-                    Socket handler = server.Accept();
-                    Thread thread = new(new ParameterizedThreadStart(ProcessClientRequest));
-
-                    thread.Start(new ClientRequest() { handler = handler, nome = "antoniio" });
-                    Console.WriteLine();
-                }
+                Socket handler = server.Accept();
+                Thread thread = new(() => serverParams.Method.Invoke(this, new object?[] { handler }));
+                thread.Start();
             }
-            catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
         }
 
+        public void Setup()
+        {
+            foreach (var method in this.GetType().GetMethods())
+            {
+                if (!method.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(Request))) continue;
+
+                try
+                {
+                    Thread endpoint = new(new ParameterizedThreadStart(InstanceEndpoint));
+                    endpoint.Start(new ServerParams() { Method = method });
+                }
+                catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
+            }
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class Request : Attribute
+    {
+        public int Port;
     }
 }
