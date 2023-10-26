@@ -41,6 +41,7 @@ namespace SD
             List<T>? data = JsonSerializer.Deserialize<List<T>>(response, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
             if (data == null) return;
             Data = data;
+            Console.WriteLine("Pessoas addicionadas" + data.Count.ToString());
         }
 
         public void InstanceEndpoint(object? param)
