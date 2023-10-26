@@ -43,6 +43,7 @@ namespace SD
             Data = data;
             Console.WriteLine("Pessoas addicionadas: " + data.Count.ToString());
             handler.Send(Encoding.UTF8.GetBytes("Data received"));
+            handler.Close();
         }
 
         public void InstanceEndpoint(object? param)
