@@ -13,8 +13,8 @@ class Program
         switch (args[0])
         {
             case "client":
-                Client.Connect(1, () => { }, JsonSerializer.Serialize(new Pessoa[] { new() { Nome = "dwdlqmlke" } }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
-                Client.Connect(2, () => { });
+                Client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), JsonSerializer.Serialize(new Pessoa[] { new() { Nome = "dwdlqmlke" } }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
+                Client.MakeRequest(nameof(Server<Pessoa>.ReadRequest));
                 break;
             case "server":
                 Server<Pessoa> server = new();

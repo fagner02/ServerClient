@@ -15,22 +15,26 @@ namespace SD
         }
 
         [Request(Port = 2)]
-        public void ReadRequest(Socket handler)
+        public virtual void ReadRequest(Socket handler, CancellationToken cancellationToken)
         {
             Console.WriteLine("Connected");
 
-            string encodedString = JsonSerializer.Serialize(Data, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
+            string encodedString = JsonSerializer.Serialize(Data, Utils.JsonOptions);
+            if (cancellationToken.IsCancellationRequested) return;
             handler.Send(Encoding.UTF8.GetBytes(encodedString));
             handler.Close();
             Console.WriteLine("Sent");
         }
 
         [Request(Port = 1)]
-        public void WriteRequest(Socket handler)
+        public virtual void WriteRequest(Socket handler, CancellationToken cancellationToken)
         {
+            Console.WriteLine("in");
+
             string response = "";
             while (true)
             {
+                if (cancellationToken.IsCancellationRequested) return;
                 byte[] buffer = new byte[1024];
                 if (handler.Available == 0) break;
                 int bytes = handler.Receive(buffer);
@@ -38,10 +42,11 @@ namespace SD
                 response += Encoding.UTF8.GetString(buffer, 0, bytes);
             }
 
-            List<T>? data = JsonSerializer.Deserialize<List<T>>(response, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
+            List<T>? data = JsonSerializer.Deserialize<List<T>>(response, Utils.JsonOptions);
             if (data == null) return;
+            if (cancellationToken.IsCancellationRequested) return;
             Data = data;
-            Console.WriteLine("Pessoas addicionadas: " + data.Count.ToString());
+            Console.WriteLine("Pessoas adicionadas: " + data.Count.ToString());
             handler.Send(Encoding.UTF8.GetBytes("Data received"));
             handler.Close();
         }
@@ -51,7 +56,7 @@ namespace SD
             ServerParams serverParams = (ServerParams)param!;
             var host = Dns.GetHostEntry(Dns.GetHostName());
             string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            int port = (int)serverParams.Method.CustomAttributes.First().NamedArguments.First().TypedValue.Value!;
+            int port = Utils.GetRequestPort(serverParams.Method.Name, this.GetType());
             IPEndPoint localEndPoint = new(IPAddress.Parse(ip), port);
             Console.WriteLine(localEndPoint);
 
@@ -59,11 +64,40 @@ namespace SD
             server.Bind(localEndPoint);
             server.Listen();
 
+            CancellationTokenSource cts = new(50000);
+            HandleConnect(server, serverParams.Method, cts.Token);
+        }
+
+        public void HandleConnect(Socket server, MethodInfo method, CancellationToken cancellationToken)
+        {
             while (true)
             {
-                Socket handler = server.Accept();
-                Thread thread = new(() => serverParams.Method.Invoke(this, new object?[] { handler }));
-                thread.Start();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Console.WriteLine("Timeout");
+                    return;
+                }
+                try
+                {
+                    var res = server.AcceptAsync(cancellationToken).AsTask();
+                    res.Wait(cancellationToken);
+
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        Console.WriteLine("Timeout");
+                        return;
+                    }
+                    if (!res.IsCompletedSuccessfully) return;
+
+                    Socket handler = res.Result;
+                    Thread thread = new(() => method.Invoke(this, new object?[] { handler, cancellationToken }));
+                    thread.Start();
+                }
+                catch
+                {
+                    Console.WriteLine("Timeout");
+                    return;
+                }
             }
         }
 
@@ -81,11 +115,5 @@ namespace SD
                 catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
             }
         }
-    }
-
-    [AttributeUsage(AttributeTargets.Method)]
-    public class Request : Attribute
-    {
-        public int Port;
     }
 }

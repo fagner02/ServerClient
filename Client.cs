@@ -6,9 +6,10 @@ namespace SD
 {
     static class Client
     {
-        public static void Connect(int port, Action callback, string? message = null)
+        public static void MakeRequest(string method, string? message = null)
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("172.25.251.25"), port);
+            int port = Utils.GetRequestPort(method, typeof(Server<Pessoa>));
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.95"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
@@ -28,7 +29,6 @@ namespace SD
                 response += Encoding.UTF8.GetString(buffer, 0, resBytes);
             }
 
-            callback();
             Console.WriteLine(response);
             client.Close();
             return;

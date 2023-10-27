@@ -20,7 +20,7 @@ namespace SD
         public void SaveToFile()
         {
             FileStream file = new("Pessoas.txt", FileMode.Create);
-            string encodedString = JsonSerializer.Serialize(Pessoas, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
+            string encodedString = JsonSerializer.Serialize(Pessoas, Utils.JsonOptions);
 
             using (var writer = new BinaryWriter(file, Encoding.UTF8, false))
             {
@@ -31,14 +31,14 @@ namespace SD
 
         public void Print()
         {
-            string encodedString = JsonSerializer.Serialize(Pessoas, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
+            string encodedString = JsonSerializer.Serialize(Pessoas, Utils.JsonOptions);
             Console.WriteLine(encodedString);
         }
 
         public void SendToServer()
         {
-            string encodedString = JsonSerializer.Serialize(Pessoas, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
-            Client.Connect(1, () => { }, encodedString);
+            string encodedString = JsonSerializer.Serialize(Pessoas);
+            Client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), encodedString);
         }
     }
 
@@ -54,8 +54,7 @@ namespace SD
             {
                 res = reader.ReadString();
             }
-            Pessoas = JsonSerializer.Deserialize<Pessoa[]>(res, new JsonSerializerOptions() { IncludeFields = true }) ?? Pessoas;
-            Console.WriteLine(Pessoas.Length);
+            Pessoas = JsonSerializer.Deserialize<Pessoa[]>(res, Utils.JsonOptions) ?? Pessoas;
         }
 
         public void ReadFromConsole()
@@ -109,8 +108,8 @@ namespace SD
 
         public void ReadFromServer()
         {
-            string encodedString = JsonSerializer.Serialize(Pessoas, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true });
-            Client.Connect(2, () => { });
+            string encodedString = JsonSerializer.Serialize(Pessoas, Utils.JsonOptions);
+            Client.MakeRequest(nameof(Server<Pessoa>.ReadRequest));
         }
     }
 }
