@@ -10,23 +10,6 @@ namespace SD
     {
         protected List<T> Data = new();
         public int Timeout = -1;
-        class ServerParams
-        {
-            public int PortStart = 0;
-            public required MethodInfo Method;
-        }
-
-        [Request(Port = 2)]
-        public virtual void ReadRequest(Socket handler, CancellationToken cancellationToken)
-        {
-            Console.WriteLine("Connected");
-
-            string encodedString = JsonSerializer.Serialize(Data, RequestConfig.JsonOptions);
-            if (cancellationToken.IsCancellationRequested) return;
-            handler.Send(Encoding.UTF8.GetBytes(encodedString));
-            handler.Close();
-            Console.WriteLine("Sent");
-        }
 
         public void InstanceEndpoint()
         {

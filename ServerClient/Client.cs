@@ -56,16 +56,16 @@ namespace SD
             client.Close();
         }
 
-        public void MakeRequestUdp(string method, string? message = null)
+        public void MakeRequestUdp()
         {
             // int port = RequestConfig.GetRequestPort(method, typeof(Udp<Pessoa>));
             var host = Dns.GetHostEntry(Dns.GetHostName());
-            string localIp = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            EndPoint localEndpoint = new IPEndPoint(IPAddress.Parse(localIp), 1);
+            IPAddress localIp = IPAddress.Parse(host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString());
+            EndPoint localEndpoint = new IPEndPoint(localIp, 1);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             EndPoint remoteIp = new IPEndPoint(IPAddress.Any, 0);
 
-            MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(localIp));
+            MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), localIp);
             client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
             client.Bind(localEndpoint);
 

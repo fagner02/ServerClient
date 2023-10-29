@@ -15,7 +15,7 @@ class Program
             case "client":
                 // Client.MakeRequest(nameof(VotoServer.WriteRequest), JsonSerializer.Serialize(new Candidato { Name = "Jon", Id = 0 }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
                 Client client = new(typeof(AdminServer), typeof(VotingSystem));
-                client.MakeRequestUdp(nameof(AdminServer.ReadRequest), JsonSerializer.Serialize(new Admin[] { new() { Name = "Joana", Password = "test" } }, RequestConfig.JsonOptions));
+                client.MakeRequestUdp();
                 break;
             case "server":
                 // VotoServer server = new();
