@@ -69,10 +69,13 @@ namespace SD
             client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
 
             EndPoint remoteIp = new IPEndPoint(IPAddress.Any, 0);
+            Console.WriteLine(remoteIp);
+            Console.WriteLine(localEndpoint);
             string response = "";
             while (true)
             {
                 byte[] buffer = new byte[1024];
+                Console.WriteLine("enter");
                 int resBytes = client.ReceiveFrom(buffer, ref remoteIp);
                 Console.WriteLine(Encoding.UTF8.GetString(buffer));
                 if (resBytes == 0) break;
