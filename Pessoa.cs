@@ -17,10 +17,11 @@ namespace SD
         {
             Pessoas = pessoas;
         }
+
         public void SaveToFile()
         {
             FileStream file = new("Pessoas.txt", FileMode.Create);
-            string encodedString = JsonSerializer.Serialize(Pessoas, Utils.JsonOptions);
+            string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
 
             using (var writer = new BinaryWriter(file, Encoding.UTF8, false))
             {
@@ -31,14 +32,15 @@ namespace SD
 
         public void Print()
         {
-            string encodedString = JsonSerializer.Serialize(Pessoas, Utils.JsonOptions);
+            string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
             Console.WriteLine(encodedString);
         }
 
         public void SendToServer()
         {
             string encodedString = JsonSerializer.Serialize(Pessoas);
-            Client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), encodedString);
+            Client client = new(typeof(Server<Pessoa>));
+            client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), encodedString);
         }
     }
 
@@ -54,7 +56,7 @@ namespace SD
             {
                 res = reader.ReadString();
             }
-            Pessoas = JsonSerializer.Deserialize<Pessoa[]>(res, Utils.JsonOptions) ?? Pessoas;
+            Pessoas = JsonSerializer.Deserialize<Pessoa[]>(res, RequestConfig.JsonOptions) ?? Pessoas;
         }
 
         public void ReadFromConsole()
@@ -108,8 +110,9 @@ namespace SD
 
         public void ReadFromServer()
         {
-            string encodedString = JsonSerializer.Serialize(Pessoas, Utils.JsonOptions);
-            Client.MakeRequest(nameof(Server<Pessoa>.ReadRequest));
+            string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
+            Client client = new(typeof(Server<Pessoa>));
+            client.MakeRequest(nameof(Server<Pessoa>.ReadRequest));
         }
     }
 }

@@ -13,11 +13,13 @@ class Program
         switch (args[0])
         {
             case "client":
-                Client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), JsonSerializer.Serialize(new Pessoa[] { new() { Nome = "dwdlqmlke" } }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
-                Client.MakeRequest(nameof(Server<Pessoa>.ReadRequest));
+                // Client.MakeRequest(nameof(VotoServer.WriteRequest), JsonSerializer.Serialize(new Candidato { Name = "Jon", Id = 0 }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
+                Client client = new(typeof(AdminServer), typeof(VotingSystem));
+                client.MakeRequestUdp(nameof(AdminServer.ReadRequest), JsonSerializer.Serialize(new Admin[] { new() { Name = "Joana", Password = "test" } }, RequestConfig.JsonOptions));
                 break;
             case "server":
-                Server<Pessoa> server = new();
+                // VotoServer server = new();
+                Udp<Admin> server = new();
                 server.Setup();
                 break;
             case "test":
@@ -36,6 +38,10 @@ class Program
                 inputStream.ReadFromFile();
                 inputStream.ReadFromConsole();
                 inputStream.ReadFromServer();
+                break;
+            case "vote":
+                SD.VotingSystem sistema = new();
+                sistema.Run();
                 break;
         }
         return;

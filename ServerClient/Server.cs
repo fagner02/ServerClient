@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -9,8 +10,10 @@ namespace SD
     public class Server<T>
     {
         protected List<T> Data = new();
+        public int Timeout = -1;
         class ServerParams
         {
+            public required Type SystemType;
             public required MethodInfo Method;
         }
 
@@ -19,7 +22,7 @@ namespace SD
         {
             Console.WriteLine("Connected");
 
-            string encodedString = JsonSerializer.Serialize(Data, Utils.JsonOptions);
+            string encodedString = JsonSerializer.Serialize(Data, RequestConfig.JsonOptions);
             if (cancellationToken.IsCancellationRequested) return;
             handler.Send(Encoding.UTF8.GetBytes(encodedString));
             handler.Close();
@@ -41,8 +44,8 @@ namespace SD
                 Console.WriteLine(bytes);
                 response += Encoding.UTF8.GetString(buffer, 0, bytes);
             }
-
-            List<T>? data = JsonSerializer.Deserialize<List<T>>(response, Utils.JsonOptions);
+            Console.WriteLine(response);
+            List<T>? data = JsonSerializer.Deserialize<List<T>>(response, RequestConfig.JsonOptions);
             if (data == null) return;
             if (cancellationToken.IsCancellationRequested) return;
             Data = data;
@@ -56,15 +59,15 @@ namespace SD
             ServerParams serverParams = (ServerParams)param!;
             var host = Dns.GetHostEntry(Dns.GetHostName());
             string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            int port = Utils.GetRequestPort(serverParams.Method.Name, this.GetType());
+            int port = RequestConfig.GetRequestPort(serverParams.Method.Name, this.GetType(), serverParams.SystemType);
             IPEndPoint localEndPoint = new(IPAddress.Parse(ip), port);
-            Console.WriteLine(localEndPoint);
+            Console.WriteLine(GetType().Name + serverParams.Method.Name + " endpoint at " + localEndPoint);
 
             Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             server.Bind(localEndPoint);
             server.Listen();
 
-            CancellationTokenSource cts = new(50000);
+            CancellationTokenSource cts = new(Timeout);
             HandleConnect(server, serverParams.Method, cts.Token);
         }
 
@@ -72,21 +75,13 @@ namespace SD
         {
             while (true)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    Console.WriteLine("Timeout");
-                    return;
-                }
+                if (cancellationToken.IsCancellationRequested) return;
                 try
                 {
                     var res = server.AcceptAsync(cancellationToken).AsTask();
                     res.Wait(cancellationToken);
 
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        Console.WriteLine("Timeout");
-                        return;
-                    }
+                    if (cancellationToken.IsCancellationRequested) return;
                     if (!res.IsCompletedSuccessfully) return;
 
                     Socket handler = res.Result;
@@ -95,7 +90,6 @@ namespace SD
                 }
                 catch
                 {
-                    Console.WriteLine("Timeout");
                     return;
                 }
             }
@@ -103,17 +97,16 @@ namespace SD
 
         public void Setup()
         {
-            foreach (var method in this.GetType().GetMethods())
+            Type systemType = new StackFrame(1, false).GetMethod()!.DeclaringType!;
+            RequestConfig.ResolveRequestMethods((method) =>
             {
-                if (!method.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(Request))) continue;
-
                 try
                 {
                     Thread endpoint = new(new ParameterizedThreadStart(InstanceEndpoint));
-                    endpoint.Start(new ServerParams() { Method = method });
+                    endpoint.Start(new ServerParams() { Method = method, SystemType = systemType });
                 }
                 catch (Exception e) { Console.WriteLine("erro"); Console.WriteLine(e); return; }
-            }
+            }, GetType());
         }
     }
 }
