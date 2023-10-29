@@ -28,19 +28,17 @@ namespace SD
             Console.WriteLine("Sent");
         }
 
-        public void InstanceEndpoint(object? param)
+        public void InstanceEndpoint()
         {
-            ServerParams serverParams = (ServerParams)param!;
             var host = Dns.GetHostEntry(Dns.GetHostName());
-            string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            // int port = RequestConfig.GetRequestPort(serverParams.Method.Name, this.GetType());
-            IPEndPoint localEndPoint = new(IPAddress.Parse(ip), 0);
+            string localIp = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
+            IPEndPoint localEndPoint = new(IPAddress.Parse(localIp), 0);
             Console.WriteLine(localEndPoint);
 
             Socket server = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             server.Bind(localEndPoint);
 
-            MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(ip));
+            MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(localIp));
             server.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
 
             server.SendTo(Encoding.UTF8.GetBytes("hamina"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), 1));
@@ -48,7 +46,7 @@ namespace SD
 
         public void Setup(int portStart = 0)
         {
-            InstanceEndpoint(new ServerParams() { Method = GetType().GetMethod(nameof(ReadRequest)), PortStart = portStart });
+            InstanceEndpoint();
         }
     }
 }

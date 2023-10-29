@@ -60,14 +60,14 @@ namespace SD
         {
             // int port = RequestConfig.GetRequestPort(method, typeof(Udp<Pessoa>));
             var host = Dns.GetHostEntry(Dns.GetHostName());
-            string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            EndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 1);
+            string localIp = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
+            EndPoint localEndpoint = new IPEndPoint(IPAddress.Parse(localIp), 1);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             EndPoint remoteIp = new IPEndPoint(IPAddress.Any, 0);
 
-            MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(ip));
+            MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(localIp));
             client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
-            client.Bind(ipEndPoint);
+            client.Bind(localEndpoint);
 
             string response = "";
             while (true)
