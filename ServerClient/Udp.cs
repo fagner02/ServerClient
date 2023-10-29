@@ -25,6 +25,7 @@ namespace SD
             server.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
             Console.WriteLine(multicastOption);
             server.SendTo(Encoding.UTF8.GetBytes("hamina"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), 1));
+            server.Close();
         }
 
         public void Setup(int portStart = 0)
