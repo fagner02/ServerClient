@@ -58,10 +58,10 @@ namespace SD
 
         public void MakeRequestUdp(string method, string? message = null)
         {
-            int port = RequestConfig.GetRequestPort(method, typeof(Udp<Pessoa>));
+            // int port = RequestConfig.GetRequestPort(method, typeof(Udp<Pessoa>));
             var host = Dns.GetHostEntry(Dns.GetHostName());
             string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            EndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            EndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 1);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             EndPoint remoteIp = new IPEndPoint(IPAddress.Any, 0);
 

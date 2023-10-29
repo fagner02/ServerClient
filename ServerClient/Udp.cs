@@ -33,8 +33,8 @@ namespace SD
             ServerParams serverParams = (ServerParams)param!;
             var host = Dns.GetHostEntry(Dns.GetHostName());
             string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            int port = RequestConfig.GetRequestPort(serverParams.Method.Name, this.GetType());
-            IPEndPoint localEndPoint = new(IPAddress.Parse(ip), port + serverParams.PortStart);
+            // int port = RequestConfig.GetRequestPort(serverParams.Method.Name, this.GetType());
+            IPEndPoint localEndPoint = new(IPAddress.Parse(ip), 0);
             Console.WriteLine(localEndPoint);
 
             Socket server = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -43,7 +43,7 @@ namespace SD
             MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(ip));
             server.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
 
-            server.SendTo(Encoding.UTF8.GetBytes("hamina"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), port));
+            server.SendTo(Encoding.UTF8.GetBytes("hamina"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), 1));
         }
 
         public void Setup(int portStart = 0)
