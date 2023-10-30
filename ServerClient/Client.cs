@@ -27,6 +27,7 @@ namespace SD
             else
                 port = RequestConfig.GetRequestPort(method, ServerType, SystemType);
 
+            Console.WriteLine(port);
             InternMakeRequest(port, message);
         }
 
