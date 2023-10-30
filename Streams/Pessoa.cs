@@ -63,7 +63,7 @@ namespace SD
         {
             while (true)
             {
-                Console.WriteLine("Enter para continuar a insirir os dados de uma pessoa.\nDigite \"s\" para sair.");
+                Console.WriteLine("Enter para continuar a inserir os dados de uma pessoa.\nDigite \"s\" para sair.");
                 string? cmd = Console.ReadLine();
                 if (cmd == "s") return;
 

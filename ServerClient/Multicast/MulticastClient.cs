@@ -33,7 +33,6 @@ namespace SD
 
             Console.WriteLine(response);
             client.Close();
-            return;
         }
     }
 }

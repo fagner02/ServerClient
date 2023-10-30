@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -7,15 +6,9 @@ using System.Text.Json;
 
 namespace SD
 {
-    public class Server<T>
+    public class Server<T> : ServerBase
     {
         protected List<T> Data = new();
-        public int Timeout = -1;
-        class ServerParams
-        {
-            public required Type? SystemType;
-            public required MethodInfo Method;
-        }
 
         [Request(Port = 2)]
         public virtual void ReadRequest(Socket handler, CancellationToken cancellationToken)
@@ -53,6 +46,16 @@ namespace SD
             handler.Send(Encoding.UTF8.GetBytes("Data received"));
             handler.Close();
         }
+    }
+
+    public class ServerBase
+    {
+        class ServerParams
+        {
+            public required Type? SystemType;
+            public required MethodInfo Method;
+        }
+        public int Timeout = -1;
 
         public void InstanceEndpoint(object? param)
         {

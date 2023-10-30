@@ -42,7 +42,7 @@ namespace SD
         }
         public static bool IsSystemClass(Type classType)
         {
-            return classType == typeof(SystemClass);
+            return classType == typeof(SystemBase);
         }
         public static void ResolveRequestMethods(Action<MethodInfo> callback, Type type)
         {

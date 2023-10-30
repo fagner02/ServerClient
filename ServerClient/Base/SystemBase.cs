@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace SD
 {
-    public abstract class SystemClass
+    public abstract class SystemBase
     {
         public void Run()
         {
@@ -13,13 +13,13 @@ namespace SD
                 if (attribute != null)
                 {
                     object value = field.GetValue(this)!;
-                    field.FieldType.GetField("Timeout")!.SetValue(value, attribute.ConstructorArguments[1].Value);
+                    field.FieldType.GetField(nameof(ServerBase.Timeout))!.SetValue(value, attribute.ConstructorArguments[1].Value);
                     int delay = (int)attribute.ConstructorArguments[2].Value!;
                     tasks.Add(Task.Run(() =>
                     {
                         if (delay > 0) { Console.WriteLine(field.FieldType.Name + " start delayed " + delay / 1000 + "s"); }
                         Task.Delay(delay).Wait();
-                        field.FieldType.GetMethod("Setup")!.Invoke(value, new object[] { GetType() });
+                        field.FieldType.GetMethod(nameof(ServerBase.Setup))!.Invoke(value, new object[] { GetType() });
                     }));
                 }
             }

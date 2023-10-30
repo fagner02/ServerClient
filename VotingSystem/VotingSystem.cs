@@ -1,6 +1,6 @@
 namespace SD
 {
-    public class VotingSystem : SystemClass
+    public class VotingSystem : SystemBase
     {
         [SystemServer(0, 20000, 5000)]
         public readonly VoteServer votoServer = new();

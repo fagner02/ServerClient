@@ -1,6 +1,6 @@
 namespace SD
 {
-    public class RealEstateSystem : SystemClass
+    public class RealEstateSystem : SystemBase
     {
         [SystemServer(0)]
         public readonly BuildingServer buildingServer = new();
