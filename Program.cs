@@ -1,4 +1,6 @@
-﻿using SD;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using SD;
 class Program
 {
     public static void Main(string[] args)
@@ -45,6 +47,9 @@ class Program
                 break;
             case "cv":
                 Client client1 = new(typeof(AdminServer), typeof(VotingSystem));
+                client1.MakeRequest(nameof(AdminServer.ReadRequest));
+                client1.MakeRequest(nameof(AdminServer.WriteRequest), JsonSerializer.Serialize(new List<Admin> { new() { Name = "Nome", Password = "Password" } }));
+                client1.MakeRequest(nameof(AdminServer.ReadRequest));
                 break;
         }
         return;
