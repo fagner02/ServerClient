@@ -10,16 +10,13 @@ namespace SD
         public int Port;
     }
 
-
     [AttributeUsage(AttributeTargets.Field)]
-    public class ServerPortStart : Attribute
+    public class SystemServer : Attribute
     {
-        public int Start;
-        public ServerPortStart(int start)
+        public SystemServer(int start, int timeout = -1, int delay = 0)
         {
-            Start = start;
-        }
 
+        }
     }
 
     public static class RequestConfig
@@ -44,7 +41,11 @@ namespace SD
 
         private static int GetPortStart(Type server, Type system)
         {
-            return (int)system.GetFields().FirstOrDefault(x => x.FieldType == server)!.CustomAttributes.First().ConstructorArguments.First().Value!;
+            return (int)system.GetFields().FirstOrDefault(x => x.FieldType == server)!.CustomAttributes.First().ConstructorArguments[0].Value!;
+        }
+        public static bool IsSystemClass(Type classType)
+        {
+            return classType == typeof(SystemClass);
         }
         public static void ResolveRequestMethods(Action<MethodInfo> callback, Type type)
         {

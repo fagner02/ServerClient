@@ -13,7 +13,7 @@ namespace SD
         public int Timeout = -1;
         class ServerParams
         {
-            public required Type SystemType;
+            public required Type? SystemType;
             public required MethodInfo Method;
         }
 
@@ -59,7 +59,10 @@ namespace SD
             ServerParams serverParams = (ServerParams)param!;
             var host = Dns.GetHostEntry(Dns.GetHostName());
             string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
-            int port = RequestConfig.GetRequestPort(serverParams.Method.Name, this.GetType(), serverParams.SystemType);
+
+            int port = serverParams.SystemType == null ?
+                RequestConfig.GetRequestPort(serverParams.Method.Name, GetType()) :
+                RequestConfig.GetRequestPort(serverParams.Method.Name, GetType(), serverParams.SystemType);
             IPEndPoint localEndPoint = new(IPAddress.Parse(ip), port);
             Console.WriteLine(GetType().Name + serverParams.Method.Name + " endpoint at " + localEndPoint);
 
@@ -75,7 +78,7 @@ namespace SD
         {
             while (true)
             {
-                if (cancellationToken.IsCancellationRequested) return;
+                if (cancellationToken.IsCancellationRequested) { return; }
                 try
                 {
                     var res = server.AcceptAsync(cancellationToken).AsTask();
@@ -90,14 +93,14 @@ namespace SD
                 }
                 catch
                 {
+                    Console.WriteLine(GetType().Name + " timed out");
                     return;
                 }
             }
         }
 
-        public void Setup()
+        public void Setup(Type? systemType = null)
         {
-            Type systemType = new StackFrame(1, false).GetMethod()!.DeclaringType!;
             RequestConfig.ResolveRequestMethods((method) =>
             {
                 try

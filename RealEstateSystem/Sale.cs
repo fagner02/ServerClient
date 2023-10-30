@@ -6,4 +6,6 @@ namespace SD
         public required Guid SellerId;
         public required PaymentMethod paymentMethod;
     }
+
+    public class SaleServer : Server<Sale> { }
 }

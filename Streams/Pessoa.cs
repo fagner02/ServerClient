@@ -20,7 +20,7 @@ namespace SD
 
         public void SaveToFile()
         {
-            FileStream file = new("Pessoas.txt", FileMode.Create);
+            FileStream file = new("Streams/Pessoas.txt", FileMode.Create);
             string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
 
             using (var writer = new BinaryWriter(file, Encoding.UTF8, false))
@@ -38,7 +38,7 @@ namespace SD
 
         public void SendToServer()
         {
-            string encodedString = JsonSerializer.Serialize(Pessoas);
+            string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
             Client client = new(typeof(Server<Pessoa>));
             client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), encodedString);
         }
@@ -50,7 +50,7 @@ namespace SD
 
         public void ReadFromFile()
         {
-            FileStream file = new("Pessoas.txt", FileMode.Open);
+            FileStream file = new("Streams/Pessoas.txt", FileMode.Open);
             string res;
             using (BinaryReader reader = new(file))
             {

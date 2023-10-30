@@ -32,7 +32,7 @@ namespace SD
 
         private static void InternMakeRequest(int port, string? message)
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.95"), port);
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.125"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);

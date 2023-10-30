@@ -1,10 +1,8 @@
-﻿using System.Text.Json;
-using SD;
+﻿using SD;
 class Program
 {
     public static void Main(string[] args)
     {
-        // args = new string[] { "server" };
         if (args.Length < 1)
         {
             Console.WriteLine("cmd: client | server | test");
@@ -13,12 +11,14 @@ class Program
         switch (args[0])
         {
             case "client":
-                // Client.MakeRequest(nameof(VotoServer.WriteRequest), JsonSerializer.Serialize(new Candidato { Name = "Jon", Id = 0 }, new JsonSerializerOptions() { IncludeFields = true, WriteIndented = true }));
                 Client client = new(typeof(AdminServer), typeof(VotingSystem));
                 client.MakeRequestUdp();
                 break;
+            case "sp":
+                Server<Pessoa> pserver = new();
+                pserver.Setup();
+                break;
             case "server":
-                // VotoServer server = new();
                 Udp<Admin> server = new();
                 server.Setup();
                 break;

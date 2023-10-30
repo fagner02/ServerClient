@@ -14,5 +14,5 @@ namespace SD
         Pix
     }
 
-
+    public class CustomerServer : Server<Customer> { }
 }
