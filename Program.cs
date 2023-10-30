@@ -48,7 +48,7 @@ class Program
             case "cv":
                 Client client1 = new(typeof(AdminServer), typeof(VotingSystem));
                 client1.MakeRequest(nameof(AdminServer.ReadRequest));
-                client1.MakeRequest(nameof(AdminServer.WriteRequest), JsonSerializer.Serialize(new List<Admin> { new() { Name = "Nome", Password = "Password" } }));
+                client1.MakeRequest(nameof(AdminServer.WriteRequest), JsonSerializer.Serialize(new List<Admin> { new() { Name = "Nome", Password = "Password" } }, RequestConfig.JsonOptions));
                 client1.MakeRequest(nameof(AdminServer.ReadRequest));
                 break;
         }

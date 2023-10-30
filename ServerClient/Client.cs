@@ -27,13 +27,12 @@ namespace SD
             else
                 port = RequestConfig.GetRequestPort(method, ServerType, SystemType);
 
-            Console.WriteLine(port);
             InternMakeRequest(port, message);
         }
 
         private static void InternMakeRequest(int port, string? message)
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.95"), port);
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.11"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
