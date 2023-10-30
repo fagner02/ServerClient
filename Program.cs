@@ -43,6 +43,9 @@ class Program
                 SD.VotingSystem sistema = new();
                 sistema.Run();
                 break;
+            case "cv":
+                Client client1 = new(typeof(AdminServer), typeof(VotingSystem));
+                break;
         }
         return;
     }
