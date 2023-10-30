@@ -2,7 +2,7 @@ namespace SD
 {
     public class VotingSystem : SystemBase
     {
-        [SystemServer(0, 20000, 5000)]
+        [SystemServer(0, 200000, 5000)]
         public readonly VoteServer votoServer = new();
         [SystemServer(10)]
         public readonly VoterServer eleitorServer = new();

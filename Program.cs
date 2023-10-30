@@ -57,10 +57,10 @@ class Program
                 break;
             case "cvotacao":
                 Client client4 = new(typeof(CandidateServer), typeof(VotingSystem));
-                List<Candidate> candidates = JsonSerializer.Deserialize<List<Candidate>>(client4.MakeRequest(nameof(CandidateServer.ReadRequest)));
+                List<Candidate> candidates = JsonSerializer.Deserialize<List<Candidate>>(client4.MakeRequest(nameof(CandidateServer.ReadRequest)))!;
                 Console.WriteLine(candidates.First());
                 Client client3 = new(typeof(VoteServer), typeof(VotingSystem));
-                client3.MakeRequest(nameof(VoteServer.WriteRequest), JsonSerializer.Serialize( candidates.First() , RequestConfig.JsonOptions));
+                client3.MakeRequest(nameof(VoteServer.WriteRequest), JsonSerializer.Serialize(candidates.First(), RequestConfig.JsonOptions));
                 break;
         }
         return;
