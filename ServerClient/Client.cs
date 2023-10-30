@@ -8,7 +8,7 @@ namespace SD
     public class Client
     {
         public Type ServerType;
-        public Type? SystemType;
+        public Type? SystemType = null;
         public Client(Type serverType, Type systemType)
         {
             ServerType = serverType;
