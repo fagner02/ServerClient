@@ -13,10 +13,7 @@ namespace SD
     [AttributeUsage(AttributeTargets.Field)]
     public class SystemServer : Attribute
     {
-        public SystemServer(int start, int timeout = -1, int delay = 0)
-        {
-
-        }
+        public SystemServer(int start, int timeout = -1, int delay = 0) { }
     }
 
     public static class RequestConfig

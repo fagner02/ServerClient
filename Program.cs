@@ -12,14 +12,14 @@ class Program
         {
             case "client":
                 Client client = new(typeof(AdminServer), typeof(VotingSystem));
-                client.MakeRequestUdp();
+                client.MakeRequest(nameof(AdminServer.ReadRequest));
                 break;
             case "sp":
                 Server<Pessoa> pserver = new();
                 pserver.Setup();
                 break;
             case "server":
-                Udp<Admin> server = new();
+                Server<Pessoa> server = new();
                 server.Setup();
                 break;
             case "test":

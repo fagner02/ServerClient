@@ -1,17 +1,14 @@
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
-using System.Text.Json;
 
 namespace SD
 {
-    public class Udp<T>
+    public class MulticastServer<T>
     {
         protected List<T> Data = new();
-        public int Timeout = -1;
 
-        public void InstanceEndpoint()
+        public void Setup()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
             string localIp = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
@@ -26,11 +23,6 @@ namespace SD
             Console.WriteLine(multicastOption);
             server.SendTo(Encoding.UTF8.GetBytes("hamina"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), 1));
             server.Close();
-        }
-
-        public void Setup(int portStart = 0)
-        {
-            InstanceEndpoint();
         }
     }
 }
