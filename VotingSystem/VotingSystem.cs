@@ -10,5 +10,11 @@ namespace SD
         public readonly AdminServer adminServer = new();
         [SystemServer(30)]
         public readonly CandidateServer candidatoServer = new();
+        public readonly MulticastClient notificationServer = new();
+
+        public void CreateAdmin()
+        {
+            clients[typeof(Admin)].MakeRequest(nameof(AdminServer.WriteRequest));
+        }
     }
 }

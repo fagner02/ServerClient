@@ -46,7 +46,6 @@ namespace SD
         }
         public static void ResolveRequestMethods(Action<MethodInfo> callback, Type type)
         {
-
             var methods = type.GetMethods();
             foreach (MethodInfo method in methods)
             {

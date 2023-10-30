@@ -6,5 +6,8 @@ namespace SD
         public required string Id;
     }
 
-    public class SellerServer : Server<Seller> { }
+    public class SellerServer : Server<Seller>
+    {
+
+    }
 }
