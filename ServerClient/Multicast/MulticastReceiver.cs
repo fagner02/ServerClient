@@ -8,12 +8,13 @@ namespace SD
     {
         public static void Run()
         {
+
             var host = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress localIp = IPAddress.Parse(host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString());
             EndPoint localEndpoint = new IPEndPoint(localIp, 1);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-            client.Bind(localEndpoint);
+            Console.WriteLine();
+            Console.WriteLine("multicast receiver running at " + localEndpoint);
 
             MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), localIp);
             client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
