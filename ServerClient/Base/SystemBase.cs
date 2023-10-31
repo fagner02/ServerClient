@@ -27,9 +27,10 @@ namespace SD
 
             tasks.Add(Task.Run(() =>
              {
+                 Task.Delay(100).Wait();
                  while (true)
                  {
-                     Console.WriteLine("insert message to send to clients");
+                     Console.WriteLine("\ninsert message to send to clients");
                      string input = Console.ReadLine()!;
                      MulticastSender.Send(input);
                  }
