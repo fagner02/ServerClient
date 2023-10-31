@@ -13,6 +13,9 @@ namespace SD.Voting
         public readonly AdminServer adminServer = new();
         [SystemServer(30)]
         public readonly CandidateServer candidatoServer = new();
-        public readonly MulticastClient notificationServer = new();
+        public static void SendNotification(string msg)
+        {
+            MulticastSender.Send(msg);
+        }
     }
 }

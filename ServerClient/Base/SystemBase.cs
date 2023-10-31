@@ -25,6 +25,16 @@ namespace SD
                 }
             }
 
+            tasks.Add(Task.Run(() =>
+             {
+                 while (true)
+                 {
+                     Console.WriteLine("insert message to send to clients");
+                     string input = Console.ReadLine()!;
+                     MulticastSender.Send(input);
+                 }
+             }));
+
             Task.WaitAll(tasks.ToArray());
         }
     }

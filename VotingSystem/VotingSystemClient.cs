@@ -2,6 +2,7 @@ namespace SD.Voting
 {
     public class VotingSystemClient : SystemClient
     {
+        public MulticastReceiver multicastReceiver = new();
         private Role LoggedRole = Role.NotLogged;
 
         private enum Role

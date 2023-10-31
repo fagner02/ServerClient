@@ -4,8 +4,20 @@ using System.Text;
 
 namespace SD
 {
-    public class MulticastClient
+    public class MulticastReceiver
     {
+        public MulticastReceiver()
+        {
+            Console.WriteLine("wre ekwnlaçdf;e");
+            Run();
+        }
+        public void Run()
+        {
+            while (true)
+            {
+                MakeRequest();
+            }
+        }
         public void MakeRequest()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -20,18 +32,14 @@ namespace SD
 
             EndPoint remoteIp = new IPEndPoint(IPAddress.Any, 0);
 
-            string response = "";
             while (true)
             {
                 byte[] buffer = new byte[1024];
-                Console.WriteLine("enter");
                 int resBytes = client.ReceiveFrom(buffer, ref remoteIp);
-                Console.WriteLine(Encoding.UTF8.GetString(buffer));
                 if (resBytes == 0) break;
-                response += Encoding.UTF8.GetString(buffer, 0, resBytes);
-            }
+                Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, resBytes));
 
-            Console.WriteLine(response);
+            }
             client.Close();
         }
     }
