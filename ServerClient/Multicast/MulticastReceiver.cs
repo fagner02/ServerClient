@@ -8,9 +8,13 @@ namespace SD
     {
         public static void Run()
         {
-
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress localIp = IPAddress.Parse(host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString());
+            IPAddress localIp;
+            using (Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = (IPEndPoint)socket.LocalEndPoint!;
+                localIp = endPoint.Address;
+            }
             EndPoint localEndpoint = new IPEndPoint(localIp, 1);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             Console.WriteLine();
