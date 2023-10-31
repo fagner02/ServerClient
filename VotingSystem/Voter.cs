@@ -1,4 +1,4 @@
-namespace SD
+namespace SD.Voting
 {
     public class Voter
     {

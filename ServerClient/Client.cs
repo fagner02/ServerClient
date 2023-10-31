@@ -32,7 +32,7 @@ namespace SD
 
         private static string MakeRequest(int port, string? message)
         {
-            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.0.117"), port);
+            IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.95"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Console.WriteLine("connecting to " + ipEndPoint);
 

@@ -1,4 +1,4 @@
-namespace SD
+namespace SD.Voting
 {
     public class VotingSystemClient : SystemClient
     {
@@ -32,7 +32,7 @@ namespace SD
             if (LoggedRole != Role.Admin)
             {
                 Console.WriteLine("you have to be logged as admin");
-                return;
+                // return;
             }
             MakeRequest<Candidate>(nameof(CandidateServer.WriteRequest), RequestConfig.Serialize(ReadInstance<Candidate>()));
         }

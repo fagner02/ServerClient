@@ -2,8 +2,8 @@ namespace SD
 {
     public class Sale
     {
-        public required Guid CustomerId;
-        public required Guid SellerId;
+        public required string CustomerId;
+        public required string SellerId;
         public required PaymentMethod paymentMethod;
     }
 

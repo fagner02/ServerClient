@@ -37,11 +37,11 @@ class Program
                 inputStream.ReadFromServer();
                 break;
             case "vote-sys":
-                VotingSystem sistema = new();
+                SD.Voting.VotingSystem sistema = new();
                 sistema.Run();
                 break;
             case "vote-client":
-                VotingSystemClient votingSystemClient = new();
+                SD.Voting.VotingSystemClient votingSystemClient = new();
                 votingSystemClient.Run();
                 break;
         }

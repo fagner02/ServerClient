@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
 
-namespace SD
+namespace SD.Voting
 {
     public class VotingSystem : SystemBase
     {

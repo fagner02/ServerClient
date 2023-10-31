@@ -1,6 +1,4 @@
-using System.Net.Sockets;
-
-namespace SD
+namespace SD.Voting
 {
     public class Candidate
     {

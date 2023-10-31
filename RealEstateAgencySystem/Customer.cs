@@ -4,6 +4,7 @@ namespace SD
     {
         public required string Name;
         public required string Cpf;
+        public required string Id;
         public List<PaymentMethod> PaymentMethods = new();
     }
 

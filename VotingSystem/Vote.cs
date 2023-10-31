@@ -1,9 +1,7 @@
-
-
 using System.Net.Sockets;
 using System.Text;
 
-namespace SD
+namespace SD.Voting
 {
     public class Vote
     {
