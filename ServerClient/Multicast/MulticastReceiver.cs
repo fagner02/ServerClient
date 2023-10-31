@@ -20,13 +20,12 @@ namespace SD
 
             EndPoint remoteIp = new IPEndPoint(IPAddress.Any, 0);
 
+            byte[] buffer = new byte[1024];
             while (true)
             {
-                byte[] buffer = new byte[1];
                 int resBytes = client.ReceiveFrom(buffer, ref remoteIp);
                 if (resBytes == 0) break;
                 Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, resBytes));
-
             }
             client.Close();
         }
