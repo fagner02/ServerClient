@@ -1,34 +1,39 @@
+
+
 using System.Net.Sockets;
 using System.Text;
-using System.Text.Json;
 
 namespace SD
 {
     public class Vote
     {
-        required public Candidate candidato;
+        public required int CandidateId;
     }
 
     public class VoteServer : Server<Vote>
     {
-        [Request(Port = 1)]
-        public override void WriteRequest(Socket handler, CancellationToken cancellationToken)
-        {
-            string response = "";
-            while (true)
-            {
-                if (cancellationToken.IsCancellationRequested) return;
-                byte[] buffer = new byte[1024];
-                if (handler.Available == 0) break;
-                int bytes = handler.Receive(buffer);
-                Console.WriteLine(bytes);
-                response += Encoding.UTF8.GetString(buffer, 0, bytes);
-            }
+        bool Closed = false;
+        readonly System.Timers.Timer timer = new(50000);
 
-            Candidate candidato = JsonSerializer.Deserialize<Candidate>(response, RequestConfig.JsonOptions)!;
-            Data.Add(new Vote() { candidato = candidato });
-            handler.Send(Encoding.UTF8.GetBytes("Voto salvo"));
+        public VoteServer()
+        {
+            timer.Start();
+            timer.Elapsed += (s, e) =>
+            {
+                Closed = true;
+            };
+            timer.AutoReset = false;
+        }
+
+        [Request(Port = 4)]
+        public void IsTimedOutRequest(Socket handler, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("Connected");
+
+            if (cancellationToken.IsCancellationRequested) return;
+            handler.Send(Encoding.UTF8.GetBytes(Closed.ToString()));
             handler.Close();
+            Console.WriteLine("Sent");
         }
     }
 }

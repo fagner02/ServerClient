@@ -21,7 +21,7 @@ namespace SD
             MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), IPAddress.Parse(localIp));
             server.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, multicastOption);
             Console.WriteLine(multicastOption);
-            server.SendTo(Encoding.UTF8.GetBytes("hamina"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), 1));
+            server.SendTo(Encoding.UTF8.GetBytes("Hello"), new IPEndPoint(IPAddress.Parse("224.168.100.2"), 1));
             server.Close();
         }
     }

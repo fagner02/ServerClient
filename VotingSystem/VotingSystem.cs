@@ -1,8 +1,11 @@
+using System.Reflection;
+using System.Text.Json;
+
 namespace SD
 {
     public class VotingSystem : SystemBase
     {
-        [SystemServer(0, 200000, 5000)]
+        [SystemServer(0)]
         public readonly VoteServer votoServer = new();
         [SystemServer(10)]
         public readonly VoterServer eleitorServer = new();
@@ -11,10 +14,5 @@ namespace SD
         [SystemServer(30)]
         public readonly CandidateServer candidatoServer = new();
         public readonly MulticastClient notificationServer = new();
-
-        public void CreateAdmin()
-        {
-            clients[typeof(Admin)].MakeRequest(nameof(AdminServer.WriteRequest));
-        }
     }
 }

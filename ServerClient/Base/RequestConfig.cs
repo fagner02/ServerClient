@@ -53,5 +53,14 @@ namespace SD
                 callback(method);
             }
         }
+
+        public static string Serialize(object obj)
+        {
+            return JsonSerializer.Serialize(obj, JsonOptions);
+        }
+        public static T Deserialize<T>(string obj)
+        {
+            return JsonSerializer.Deserialize<T>(obj, JsonOptions)!;
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace SD
 {
     public abstract class SystemBase
     {
-        public Dictionary<Type, Client> clients = new();
+
         public void Run()
         {
             List<Task> tasks = new();
@@ -13,7 +13,6 @@ namespace SD
                 CustomAttributeData? attribute = field.CustomAttributes.FirstOrDefault(x => x.AttributeType == typeof(SystemServer));
                 if (attribute != null)
                 {
-                    clients.Add(field.FieldType, new Client(field.FieldType, GetType()));
                     object value = field.GetValue(this)!;
                     field.FieldType.GetField(nameof(ServerBase.Timeout))!.SetValue(value, attribute.ConstructorArguments[1].Value);
                     int delay = (int)attribute.ConstructorArguments[2].Value!;

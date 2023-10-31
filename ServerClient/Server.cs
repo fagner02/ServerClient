@@ -14,7 +14,6 @@ namespace SD
         public virtual void ReadRequest(Socket handler, CancellationToken cancellationToken)
         {
             Console.WriteLine("Connected");
-
             string encodedString = JsonSerializer.Serialize(Data, RequestConfig.JsonOptions);
             if (cancellationToken.IsCancellationRequested) return;
             handler.Send(Encoding.UTF8.GetBytes(encodedString));
@@ -36,7 +35,11 @@ namespace SD
                 response += Encoding.UTF8.GetString(buffer, 0, bytes);
             }
             Console.WriteLine(response);
-            List<T>? data = JsonSerializer.Deserialize<List<T>>(response, RequestConfig.JsonOptions);
+            List<T>? data;
+
+            try { data = JsonSerializer.Deserialize<List<T>>(response, RequestConfig.JsonOptions); }
+            catch { data = new() { JsonSerializer.Deserialize<T>(response, RequestConfig.JsonOptions)! }; }
+
             if (data == null) return;
             if (cancellationToken.IsCancellationRequested) return;
             Data.AddRange(data);
@@ -54,6 +57,7 @@ namespace SD
             public required MethodInfo Method;
         }
         public int Timeout = -1;
+        public bool IsTimedOut;
 
         public void InstanceEndpoint(object? param)
         {
@@ -73,30 +77,33 @@ namespace SD
 
             CancellationTokenSource cts = new(Timeout);
             HandleConnect(server, serverParams.Method, cts.Token);
+            server.Close();
+            server.Dispose();
         }
 
         public void HandleConnect(Socket server, MethodInfo method, CancellationToken cancellationToken)
         {
             while (true)
             {
-                if (cancellationToken.IsCancellationRequested) { return; }
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    IsTimedOut = true;
+                    Console.WriteLine(GetType().Name + " timed out");
+                    return;
+                }
                 try
                 {
                     var res = server.AcceptAsync(cancellationToken).AsTask();
                     res.Wait(cancellationToken);
 
-                    if (cancellationToken.IsCancellationRequested) return;
-                    if (!res.IsCompletedSuccessfully) return;
+                    if (cancellationToken.IsCancellationRequested) { continue; }
+                    if (!res.IsCompletedSuccessfully) continue;
 
                     Socket handler = res.Result;
                     Thread thread = new(() => method.Invoke(this, new object?[] { handler, cancellationToken }));
                     thread.Start();
                 }
-                catch
-                {
-                    Console.WriteLine(GetType().Name + " timed out");
-                    return;
-                }
+                catch { }
             }
         }
 
