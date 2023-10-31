@@ -11,7 +11,7 @@ namespace SD
             IPAddress localIp;
             using (Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
-                socket.Connect("8.8.8.8", 65530);
+                socket.Connect("8.8.8.8", 0);
                 IPEndPoint endPoint = (IPEndPoint)socket.LocalEndPoint!;
                 localIp = endPoint.Address;
             }
