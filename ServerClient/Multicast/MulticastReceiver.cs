@@ -17,7 +17,8 @@ namespace SD
             }
             EndPoint localEndpoint = new IPEndPoint(localIp, 1);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            Console.WriteLine();
+
+            client.Bind(localEndpoint);
             Console.WriteLine("multicast receiver running at " + localEndpoint);
 
             MulticastOption multicastOption = new(IPAddress.Parse("224.168.100.2"), localIp);
@@ -30,7 +31,8 @@ namespace SD
             {
                 int resBytes = client.ReceiveFrom(buffer, ref remoteIp);
                 if (resBytes == 0) break;
-                Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, resBytes));
+                Console.WriteLine("message received:");
+                Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, resBytes) + "\n");
             }
             client.Close();
         }
