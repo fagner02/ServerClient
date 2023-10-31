@@ -4,21 +4,9 @@ using System.Text;
 
 namespace SD
 {
-    public class MulticastReceiver
+    public static class MulticastReceiver
     {
-        public MulticastReceiver()
-        {
-            Console.WriteLine("wre ekwnlaçdf;e");
-            Run();
-        }
-        public void Run()
-        {
-            while (true)
-            {
-                MakeRequest();
-            }
-        }
-        public void MakeRequest()
+        public static void Run()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress localIp = IPAddress.Parse(host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString());
@@ -34,7 +22,7 @@ namespace SD
 
             while (true)
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[1];
                 int resBytes = client.ReceiveFrom(buffer, ref remoteIp);
                 if (resBytes == 0) break;
                 Console.WriteLine(Encoding.UTF8.GetString(buffer, 0, resBytes));

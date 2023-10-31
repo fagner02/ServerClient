@@ -20,6 +20,8 @@ namespace SD
         public void Run()
         {
             List<MethodInfo> methods = new();
+            Thread notification = new(MulticastReceiver.Run);
+            notification.Start();
             foreach (var x in GetType().GetMethods())
             {
                 if (x.DeclaringType != GetType()) continue;
