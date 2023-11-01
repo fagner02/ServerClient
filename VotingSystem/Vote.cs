@@ -26,8 +26,6 @@ namespace SD.Voting
         [Request(Port = 4)]
         public void IsTimedOutRequest(Socket handler, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Connected");
-
             if (cancellationToken.IsCancellationRequested) return;
             handler.Send(Encoding.UTF8.GetBytes(Closed.ToString()));
             handler.Close();

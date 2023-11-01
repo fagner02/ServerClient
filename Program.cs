@@ -7,7 +7,6 @@ class Program
 {
     public static void Main(string[] args)
     {
-        // args = new string[] { "vote-client" };
         if (args.Length < 1)
         {
             Console.WriteLine("cmd: vote-client | vote-sys | server | test");

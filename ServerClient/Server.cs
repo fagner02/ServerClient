@@ -19,7 +19,6 @@ namespace SD
         [Request(Port = 2)]
         public virtual void ReadRequest(Socket handler, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Connected");
             string encodedString = JsonSerializer.Serialize(Data, RequestConfig.JsonOptions);
             if (cancellationToken.IsCancellationRequested) return;
             handler.Send(Encoding.UTF8.GetBytes(encodedString));
@@ -42,7 +41,6 @@ namespace SD
                 byte[] buffer = new byte[1024];
                 if (handler.Available == 0) break;
                 int bytes = handler.Receive(buffer);
-                Console.WriteLine(bytes);
                 response += Encoding.UTF8.GetString(buffer, 0, bytes);
             }
             Console.WriteLine(response);

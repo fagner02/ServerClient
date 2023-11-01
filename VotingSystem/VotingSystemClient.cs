@@ -32,7 +32,7 @@ namespace SD.Voting
             if (LoggedRole != Role.Admin)
             {
                 Console.WriteLine("you have to be logged as admin");
-                // return;
+                return;
             }
             MakeRequest<Candidate>(nameof(CandidateServer.WriteRequest), RequestConfig.Serialize(ReadInstance<Candidate>()));
         }
@@ -50,7 +50,6 @@ namespace SD.Voting
         public void LogInAsAdmin()
         {
             var admin = ReadInstance<Admin>();
-            Console.WriteLine("in");
             var admins = RequestConfig.Deserialize<List<Admin>>(MakeRequest<Admin>(nameof(AdminServer.ReadRequest)));
             if (admins.Any(x => x.Name == admin.Name && x.Password == admin.Password))
             {
