@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Text.Json;
 
@@ -61,6 +63,18 @@ namespace SD
         public static T Deserialize<T>(string obj)
         {
             return JsonSerializer.Deserialize<T>(obj, JsonOptions)!;
+        }
+
+        public static IPAddress GetLocalIp()
+        {
+            IPAddress localIp;
+            using (Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 0);
+                IPEndPoint endPoint = (IPEndPoint)socket.LocalEndPoint!;
+                localIp = endPoint.Address;
+            }
+            return localIp;
         }
     }
 }

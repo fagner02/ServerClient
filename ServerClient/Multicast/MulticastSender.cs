@@ -8,8 +8,7 @@ namespace SD
     {
         public static void Send(string msg)
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            string localIp = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
+            string localIp = RequestConfig.GetLocalIp().ToString();
             IPEndPoint localEndPoint = new(IPAddress.Parse(localIp), 0);
 
             Socket server = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);

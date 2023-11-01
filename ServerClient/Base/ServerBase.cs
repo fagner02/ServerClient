@@ -17,8 +17,7 @@ namespace SD
         public void InstanceEndpoint(object? param)
         {
             ServerParams serverParams = (ServerParams)param!;
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            string ip = host.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork).ToString();
+            string ip = RequestConfig.GetLocalIp().ToString();
 
             int port = serverParams.SystemType == null ?
                 RequestConfig.GetRequestPort(serverParams.Method.Name, GetType()) :
