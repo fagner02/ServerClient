@@ -1,6 +1,6 @@
 namespace SD
 {
-    public class RealEstateAgencySystemClient : SystemClient
+    public class RealEstateAgencySystemClient : SystemClientBase
     {
         public RealEstateAgencySystemClient()
         {

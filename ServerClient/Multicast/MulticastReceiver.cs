@@ -6,6 +6,9 @@ namespace SD
 {
     public static class MulticastReceiver
     {
+        /// <summary>
+        /// Recebe mensagens do server multicast
+        /// </summary>
         public static void Run()
         {
             IPAddress localIp = RequestConfig.GetLocalIp();

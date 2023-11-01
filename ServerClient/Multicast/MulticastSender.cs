@@ -6,6 +6,10 @@ namespace SD
 {
     public static class MulticastSender
     {
+        /// <summary>
+        /// Envia uma mensagem para os clientes multicast
+        /// </summary>
+        /// <param name="msg">A mensagem a ser enviada para os clientes</param>
         public static void Send(string msg)
         {
             string localIp = RequestConfig.GetLocalIp().ToString();

@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace SD.Voting
 {
-    public class VotingSystem : SystemBase
+    public class VotingSystem : SystemServerBase
     {
         [SystemServer(0)]
         public readonly VoteServer votoServer = new();

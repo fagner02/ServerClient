@@ -6,8 +6,16 @@ namespace SD
 {
     public class Server<T> : ServerBase
     {
+        /// <summary>
+        /// Lista de entidades do tipo T salva no server
+        /// </summary>
         protected List<T> Data = new();
 
+        /// <summary>
+        /// Request que lê o array de entidades do server
+        /// </summary>
+        /// <param name="handler">O socket da conexão</param>
+        /// <param name="cancellationToken"></param>
         [Request(Port = 2)]
         public virtual void ReadRequest(Socket handler, CancellationToken cancellationToken)
         {
@@ -19,6 +27,11 @@ namespace SD
             Console.WriteLine("Sent");
         }
 
+        /// <summary>
+        /// Request que escreve uma ou mais entidades ao array de entidades do server
+        /// </summary>
+        /// <param name="handler">O socket da conexão</param>
+        /// <param name="cancellationToken"></param>
         [Request(Port = 1)]
         public virtual void WriteRequest(Socket handler, CancellationToken cancellationToken)
         {

@@ -2,10 +2,20 @@ using System.Reflection;
 
 namespace SD
 {
-    public class SystemClient
+    /// <summary>
+    /// A classe base para cliente de sistema. Cria um conjunto de clientes em apenas um sistema.
+    /// </summary>
+    public class SystemClientBase
     {
+        /// <summary>
+        /// Dicionário de clientes
+        /// </summary>
         public Dictionary<Type, Client> clients = new();
 
+        /// <summary>
+        /// Cria clientes para cada server do sistema definido por systemType
+        /// </summary>
+        /// <param name="systemType">Tipo do SystemServerBase do qual esse SystemClientBase tem relação</param>
         public void Initialize(Type systemType)
         {
             foreach (FieldInfo field in systemType!.GetFields())
@@ -17,6 +27,9 @@ namespace SD
             }
         }
 
+        /// <summary>
+        /// Recebe comandos do console para rodar os métodos de request do cliente 
+        /// </summary>
         public void Run()
         {
             List<MethodInfo> methods = new();
@@ -52,6 +65,11 @@ namespace SD
             }
         }
 
+        /// <summary>
+        /// Lê uma entidade de tipo T do console
+        /// </summary>
+        /// <typeparam name="T">Tipo da entidade</typeparam>
+        /// <returns>Uma nova instancia da entidade de tipo T</returns>
         public static T ReadInstance<T>()
         {
             Console.WriteLine("insert " + typeof(T).Name + " data");
@@ -242,11 +260,24 @@ namespace SD
             field.SetValue(obj, value);
         }
 
+        /// <summary>
+        /// Faz uma request definida pelo method para o cliente do tipo T 
+        /// </summary>
+        /// <typeparam name="T">Tipo de entidade que o cliente usa</typeparam>
+        /// <param name="method">O método de request do server que o cliente vai chamar</param>
+        /// <returns>O resultado do request do server</returns>
         public string MakeRequest<T>(string method)
         {
             return clients[typeof(T)].MakeRequest(method);
         }
 
+        /// <summary>
+        /// Faz uma request definida pelo method para o cliente do tipo T 
+        /// </summary>
+        /// <typeparam name="T">Tipo de entidade que o cliente usa</typeparam>
+        /// <param name="method">O método de request do server que o cliente vai chamar</param>
+        /// <param name="msg">A mensagem a ser enviada para o server na request</param>
+        /// <returns>O resultado do request do server</returns>
         public string MakeRequest<T>(string method, string msg)
         {
             return clients[typeof(T)].MakeRequest(method, msg);

@@ -2,9 +2,14 @@ using System.Reflection;
 
 namespace SD
 {
-    public abstract class SystemBase
+    /// <summary>
+    /// A classe base para server de sistema. Cria um conjunto de servers em apenas um sistema.
+    /// </summary>
+    public abstract class SystemServerBase
     {
-
+        /// <summary>
+        /// Chama o Setup de cada server do sistema
+        /// </summary>
         public void Run()
         {
             List<Task> tasks = new();

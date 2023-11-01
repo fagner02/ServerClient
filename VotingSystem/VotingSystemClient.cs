@@ -1,6 +1,6 @@
 namespace SD.Voting
 {
-    public class VotingSystemClient : SystemClient
+    public class VotingSystemClient : SystemClientBase
     {
         private Role LoggedRole = Role.NotLogged;
 

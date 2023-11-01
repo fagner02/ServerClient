@@ -1,23 +1,40 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.Json;
 
 namespace SD
 {
     public class Client
     {
-        public Type ServerType;
-        public Type? SystemType = null;
+        /// <summary>
+        /// Tipo do Server ao qual esse Client está relacionado
+        /// </summary>
+        readonly private Type ServerType;
+        /// <summary>
+        /// Tipo do SystemServerBase ao qual o Server está relacionado
+        /// </summary>
+        readonly private Type? SystemType = null;
+
+        /// <param name="serverType">Tipo do Server ao qual esse Client está relacionado</param>
+        /// <param name="systemType">Tipo do SystemServerBase ao qual o Server está relacionado</param>
         public Client(Type serverType, Type systemType)
         {
             ServerType = serverType;
             SystemType = systemType;
         }
+
+        /// <param name="serverType">Tipo do Server ao qual esse Client está relacionado</param>
         public Client(Type serverType)
         {
             ServerType = serverType;
         }
+
+        /// <summary>
+        /// Faz uma request definida pelo method para o server
+        /// </summary>
+        /// <param name="method">Método de request do server</param>
+        /// <param name="message">Mensagem a ser enviada na request</param>
+        /// <returns>A resposta do server</returns>
         public string MakeRequest(string method, string? message = null)
         {
             int port;
@@ -30,6 +47,12 @@ namespace SD
             return MakeRequest(port, message);
         }
 
+        /// <summary>
+        /// Faz uma request definida pelo method para o server
+        /// </summary>
+        /// <param name="port">A port do endpoint da request do server</param>
+        /// <param name="message">Mensagem a ser enviada na request</param>
+        /// <returns>A resposta do server</returns>
         private static string MakeRequest(int port, string? message)
         {
             IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.125"), port);

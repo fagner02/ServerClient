@@ -44,8 +44,14 @@ namespace SD
         }
         public static bool IsSystemClass(Type classType)
         {
-            return classType == typeof(SystemBase);
+            return classType == typeof(SystemServerBase);
         }
+
+        /// <summary>
+        /// Chama um callback para os métodos de request de um server
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="type"></param>
         public static void ResolveRequestMethods(Action<MethodInfo> callback, Type type)
         {
             var methods = type.GetMethods();
