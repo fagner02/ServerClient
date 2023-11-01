@@ -39,8 +39,10 @@ namespace SD
         public void SendToServer()
         {
             string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
-            Client client = new(typeof(Server<Pessoa>));
-            client.MakeRequest(nameof(Server<Pessoa>.WriteRequest), encodedString);
+            Client client = new(typeof(PessoaServer));
+            client.MakeRequest(nameof(PessoaServer.SendPeopleNum), Pessoas.Length.ToString());
+            client.MakeRequest(nameof(PessoaServer.SendByteNum), encodedString.Length.ToString());
+            client.MakeRequest(nameof(PessoaServer.SendPeople), encodedString);
         }
     }
 
@@ -111,8 +113,8 @@ namespace SD
         public void ReadFromServer()
         {
             string encodedString = JsonSerializer.Serialize(Pessoas, RequestConfig.JsonOptions);
-            Client client = new(typeof(Server<Pessoa>));
-            client.MakeRequest(nameof(Server<Pessoa>.ReadRequest));
+            Client client = new(typeof(PessoaServer));
+            client.MakeRequest(nameof(PessoaServer.ReadRequest));
         }
     }
 }

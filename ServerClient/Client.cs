@@ -44,17 +44,6 @@ namespace SD
             else
                 port = RequestConfig.GetRequestPort(method, ServerType, SystemType);
 
-            return MakeRequest(port, message);
-        }
-
-        /// <summary>
-        /// Faz uma request definida pelo method para o server
-        /// </summary>
-        /// <param name="port">A port do endpoint da request do server</param>
-        /// <param name="message">Mensagem a ser enviada na request</param>
-        /// <returns>A resposta do server</returns>
-        private static string MakeRequest(int port, string? message)
-        {
             IPEndPoint ipEndPoint = new(IPAddress.Parse("192.168.100.125"), port);
             using Socket client = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Console.WriteLine("connecting to " + ipEndPoint);

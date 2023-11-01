@@ -9,13 +9,13 @@ class Program
     {
         if (args.Length < 1)
         {
-            Console.WriteLine("cmd: vote-client | vote-sys | server | test");
+            Console.WriteLine("cmd: vote-client | vote-sys | server | test | rea-sys | rea-client");
             return;
         }
         switch (args[0])
         {
             case "server":
-                Server<Pessoa> server = new();
+                PessoaServer server = new();
                 server.Setup();
                 break;
             case "test":
@@ -42,6 +42,14 @@ class Program
             case "vote-client":
                 SD.Voting.VotingSystemClient votingSystemClient = new();
                 votingSystemClient.Run();
+                break;
+            case "rea-sys":
+                RealEstateAgencySystem realEstateAgencySystem = new();
+                realEstateAgencySystem.Run();
+                break;
+            case "rea-client":
+                RealEstateAgencySystemClient realEstateAgencySystemClient = new();
+                realEstateAgencySystemClient.Run();
                 break;
         }
         return;
