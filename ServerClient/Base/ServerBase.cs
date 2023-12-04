@@ -30,7 +30,12 @@ namespace SD
                 RequestConfig.GetRequestPort(serverParams.Method.Name, GetType()) :
                 RequestConfig.GetRequestPort(serverParams.Method.Name, GetType(), serverParams.SystemType);
             IPEndPoint localEndPoint = new(IPAddress.Parse(ip), port);
-            Console.WriteLine(GetType().Name + serverParams.Method.Name + " endpoint at " + localEndPoint);
+            string GREEN = Console.IsOutputRedirected ? "" : "\x1b[92m";
+            string BLUE = Console.IsOutputRedirected ? "" : "\x1b[94m";
+            string NORMAL = Console.IsOutputRedirected ? "" : "\x1b[39m";
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"{BLUE}{GetType().Name + serverParams.Method.Name}{NORMAL} endpoint at {GREEN}{localEndPoint}{NORMAL}");
+            Console.ResetColor();
 
             Socket server = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             server.Bind(localEndPoint);

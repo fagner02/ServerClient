@@ -11,22 +11,22 @@ namespace SD
         public float Dimensions;
         public required Address Address;
     }
-    public class House
+    public class House : Building
     {
         public int Bedrooms;
         public int Bathrooms;
     }
-    public class Apartment
+    public class Apartment : Building
     {
         public int Bedrooms;
         public int Bathrooms;
         public string? ApartmentNum;
     }
-    public class Flat
+    public class Flat : Building
     {
         public bool LaundryIncluded;
     }
-    public class Kitnet
+    public class Kitnet : Building
     {
     }
 
